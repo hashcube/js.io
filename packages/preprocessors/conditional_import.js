@@ -1,5 +1,5 @@
 var fs = require('fs');
-var JSIO = jsio.__jsio;
+var util = jsio.__jsio.__util;
 
 var conditionalImport = /(\s*import\s+)([^=+*"',\s\r\n;\/]+\|[^=+"',\s\r\n;\/]+)(\s*[^'";=]+)/gm;
 
@@ -8,10 +8,10 @@ function replace(path, raw, p1, p2, p3) {
 		var opts = p2.split('|');
 
 		for(var i = 0; i < opts.length; i++) {
-			var modules = JSIO.__util.resolveModulePath(opts[i], path);
+			var modules = util.resolveModulePath(opts[i], path);
 			var found = false;
 			for (var j = 0; j < modules.length; j++) {
-				if (fs.existsSync(modules[j].path)) {
+				if (fs.existsSync(util.buildPath(modules[j].directory, modules[j].filename))) {
 					found = true;
 					break;
 				}
