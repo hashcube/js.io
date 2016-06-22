@@ -1,7 +1,7 @@
 var fs = require('fs');
 var util = jsio.__jsio.__util;
 
-var condRegx = /^(\s*\/\/\s*jsio\s*:\s*if\s*)^([^=]+?)^(\s*\/\/\s*jsio\s*:\s*endif)/gm;
+var condRegx = /^(\s*\/\/\s*jsio\s*:\s*if\s*)^([^=]+?)^(\s*\/\/\s*jsio\s*:\s*fi)/gm;
 var importRegx = /^(\s*import\s+)([^=+*"',\s\r\n;\/]+)(\s*[^'";=\n\r]*)/gm;
 
 function checkExists(from, path) {
