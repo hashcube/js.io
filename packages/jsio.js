@@ -721,7 +721,7 @@
       if (modulePath != 'base' && (opts.reload || !opts.dontPreprocess && !moduleDef.pre)) {
         moduleDef.pre = true;
 
-        applyPreprocessors(fromDir, moduleDef, ["import", "conditional_import", "inlineSlice"], opts);
+        applyPreprocessors(fromDir, moduleDef, ["conditional_import", "import", "inlineSlice"], opts);
       }
 
       // any additional preprocessors?
@@ -1031,7 +1031,7 @@
       path = ENV.getCwd() || '/';
       var moduleDef = new ModuleDef(path);
       moduleDef.src = src;
-      applyPreprocessors(path, moduleDef, ["import", "conditional_import", "cls"], {});
+      applyPreprocessors(path, moduleDef, ["conditional_import", "import", "cls"], {});
       execModuleDef(ENV.global, moduleDef);
     };
 

@@ -1,32 +1,41 @@
 var fs = require('fs');
 var util = jsio.__jsio.__util;
 
-var conditionalImport = /(\s*import\s+)([^=+*"',\s\r\n;\/]+\|[^=+"',\s\r\n;\/]+)(\s*[^'";=]+)/gm;
+var condRegx = /^(\s*\/\/\s*jsio\s*:\s*if\s*)^([^=]+?)^(\s*\/\/\s*jsio\s*:\s*endif)/gm;
+var importRegx = /^(\s*import\s+)([^=+*"',\s\r\n;\/]+)(\s*[^'";=\n\r]*)/gm;
+
+function checkExists(from, path) {
+	var modules = util.resolveModulePath(from, path);
+	var found = false;
+
+	for (var j = 0; j < modules.length; j++) {
+		if (fs.existsSync(util.buildPath(modules[j].directory, modules[j].filename))) {
+			found = true;
+			break;
+		}
+	}
+
+	return found;
+}
 
 function replace(path, raw, p1, p2, p3) {
-	if (!/\/\//.test(p1)) {
-		var opts = p2.split('|');
+	var replaceStr = '';
 
-		for(var i = 0; i < opts.length; i++) {
-			var modules = util.resolveModulePath(opts[i], path);
-			var found = false;
-			for (var j = 0; j < modules.length; j++) {
-				if (fs.existsSync(util.buildPath(modules[j].directory, modules[j].filename))) {
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				p2 = opts[i];
-				break;
-			}
+	while(true) {
+		var match = importRegx.exec(p2);
+		if (!match) {
+			break;
 		}
 
-                return p1 + p2 + p3;
-        }
-        return raw;
-}
+		if (checkExists(match[2])) {
+			replaceStr = match[0];
+			break;
+		}
+	}
+
+	return replaceStr;
+};
 
 exports = function (path, moduleDef, opts) {
-	moduleDef.src = moduleDef.src.replace(conditionalImport, replace.bind(null, path));
-}
+	moduleDef.src = moduleDef.src.replace(condRegx, replace.bind(null, path));
+};
