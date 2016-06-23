@@ -1,8 +1,7 @@
 var fs = require('fs');
 var util = jsio.__jsio.__util;
 
-var condRegx = /^(\s*\/\/\s*jsio\s*:\s*if\s*)^([^=]+?)^(\s*\/\/\s*jsio\s*:\s*fi)/gm;
-var importRegx = /^(\s*import\s+)([^=+*"',\s\r\n;\/]+)(\s*[^'";=\n\r]*)/gm;
+var condRegx = /^\s*(\/\/|\/\*)\s*jsio\s*:\s*if\s*(\*\/|\s*)\s*^([^=]+?)^\s*(\/\/|\/\*)\s*jsio\s*:\s*fi\s*(\*\/*\s*|\s*)$/gm;
 
 function checkExists(from, path) {
 	var modules = util.resolveModulePath(from, path);
@@ -19,15 +18,16 @@ function checkExists(from, path) {
 }
 
 function replace(path, raw, p1, p2, p3) {
+	var importRegx = /^(\s*import\s+)([^=+*"',\s\r\n;\/]+)(\s*[^'";=\n\r]*)/gm;
 	var replaceStr = '';
 
 	while(true) {
-		var match = importRegx.exec(p2);
+		var match = importRegx.exec(p3);
 		if (!match) {
 			break;
 		}
 
-		if (checkExists(match[2])) {
+		if (checkExists(match[2], path)) {
 			replaceStr = match[0];
 			break;
 		}
