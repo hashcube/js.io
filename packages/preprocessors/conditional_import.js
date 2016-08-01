@@ -1,7 +1,7 @@
 var fs = require('fs');
 var util = jsio.__jsio.__util;
 
-var condRegx = /^\s*(\/\/|\/\*)\s*jsio\s*:\s*if\s*(\*\/|\s*)\s*^([^=]+?)^\s*(\/\/|\/\*)\s*jsio\s*:\s*fi\s*(\*\/*\s*|\s*)$/gm;
+var condRegx = /^[^\S\r\n]*(\/\/|\/\*)\s*jsio\s*:\s*if\s*(\*\/|\s*)\s*^([^=]+?)\n^\s*(\/\/|\/\*)\s*jsio\s*:\s*fi(\s*\*\/*|)/gm;
 
 function checkExists(from, path) {
 	var modules = util.resolveModulePath(from, path);
