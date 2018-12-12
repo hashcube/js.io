@@ -240,7 +240,6 @@ $.stopEvent = function(e) {
 	if (e) {
 		e.cancelBubble = true;
 		if(e.stopPropagation) e.stopPropagation();
-		if(e.preventDefault) e.preventDefault();
 	}
 }
 
